@@ -2,19 +2,24 @@
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { LogInIcon } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState, useTransition } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from 'react-hook-form'
 import { signUpSchema, SignUpValues } from '@/lib/validation'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { PasswordInput } from '@/components/PasswordInput'
+import { signUp } from './actions'
+import LoadingButton from '@/components/LoadingButton'
 
 export default function SignUpForm() {
+    const [error, setError] = useState<string>();
+    const [isPending, startTransition] = useTransition()
 
     const form = useForm<SignUpValues>({
         resolver: zodResolver(signUpSchema),
+
         defaultValues: {
             email: "",
             username: "",
@@ -23,12 +28,17 @@ export default function SignUpForm() {
     });
 
     async function onSubmit(values: SignUpValues) {
-
+        setError(undefined);
+        startTransition(async () => {
+            const { error } = await signUp(values);
+            if (error) setError(error);
+        });
     }
 
     return (
-        <div>
-            <form>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+                {error && <p className="text-center text-destructive">{error}</p>}
                 <div className="grid gap-6">
                     <div className="flex flex-col gap-4">
                         <Button variant="outline" className="w-full border border-gray-300 hover:border-blue-300 transition-colors duration-300 rounded-md px-4 py-2">
@@ -41,52 +51,59 @@ export default function SignUpForm() {
                             Or continue with
                         </span>
                     </div>
-                    <div className="grid gap-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Username</Label>
-                            <Input
-                                id="username"
-                                type="text"
-                                placeholder=""
-                                required
-                                className='border-gray-300 focus:border-blue-200 transition-colors duration-300'
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="m@example.com"
-                                required
-                                className='border-gray-300 focus:border-blue-200 transition-colors duration-300 placeholder:text-gray-400'
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <div className="flex items-center">
-                                <Label htmlFor="password">Password</Label>
-                                <Link
-                                    href="#"
-                                    className="ml-auto text-sm underline-offset-4 hover:underline text-blue-400 font-semibold"
-                                >
-                                    Forgot your password?
-                                </Link>
-                            </div>
-                            <Input id="password" type="password" required className='border-gray-300 focus:border-blue-200 transition-colors duration-300'/>
-                        </div>
-                        <Button type="submit" className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-700 hover:via-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-2xl hover:shadow-indigo-500/25 transform transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:ring-opacity-50 flex items-center justify-center gap-2 ">
-                            <LogInIcon className="w-5 h-5" />
-                            Login
-                        </Button>
+                    <div className="grid gap-4">
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Username" {...field} className='border-gray-300 focus:border-blue-200 transition-colors duration-300 placeholder:text-gray-400'/>
+                                    </FormControl>
+                                    <FormMessage className='text-xs text-red-500'/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Email" type="email" {...field} className='border-gray-300 focus:border-blue-200 transition-colors duration-300 placeholder:text-gray-400'/>
+                                    </FormControl>
+                                    <FormMessage className='text-xs text-red-500'/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <PasswordInput placeholder="Password" {...field} className='border-gray-300 focus:border-blue-200 transition-colors duration-300 placeholder:text-gray-400'/>
+                                    </FormControl>
+                                    <FormMessage className='text-xs text-red-500'/>
+                                </FormItem>
+                            )}
+                        />
+
+                        <LoadingButton loading={isPending} type="submit" className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-700 hover:via-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-2xl hover:shadow-indigo-500/25 transform transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:ring-opacity-50 flex items-center justify-center gap-2">
+                            Create account
+                        </LoadingButton>
                     </div>
                     <div className="text-center text-sm">
                         Don&apos;t have an account?{" "}
                         <Link href="/login" className="underline underline-offset-4">
-                            Sign up
+                            Login
                         </Link>
                     </div>
                 </div>
             </form>
-        </div>
+        </Form>
     )
 }
