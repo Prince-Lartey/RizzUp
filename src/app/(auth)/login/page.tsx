@@ -1,11 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Metadata } from 'next'
 import React from 'react'
-import { FcGoogle } from "react-icons/fc";
-import SignUpForm from './SignUpForm'
+import LoginForm from './LoginForm'
 
 export const metadata: Metadata = {
-    title: "Sign Up"
+    title: "Login"
 }
 
 export default function page() {
@@ -15,13 +14,13 @@ export default function page() {
                 <div className="flex flex-col gap-6">
                     <Card className='border-gray-300'>
                         <CardHeader className="text-center">
-                            <CardTitle className="text-xl">Sign up to rizzUp</CardTitle>
-                            <CardDescription className='text-xs'>
-                                Ready to level up your vibe? Join RizzUp and meet real friends.
+                            <CardTitle className="text-2xl">Welcome back</CardTitle>
+                            <CardDescription className=''>
+                                Login to your rizzUp account
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <SignUpForm />
+                            <LoginForm />
                         </CardContent>
                     </Card>
                     <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
