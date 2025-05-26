@@ -1,11 +1,13 @@
 "use client";
 
 import { useSession } from "@/app/(main)/SessionProvider";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import UserAvatar from "./UserAvatar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { UserIcon } from "lucide-react";
+import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from "lucide-react";
+import { useTheme } from "next-themes";
+import { logout } from "@/app/(auth)/actions";
 
 interface UserButtonProps {
     className?: string;
@@ -14,6 +16,8 @@ interface UserButtonProps {
 export default function UserButton({ className }: UserButtonProps) {
     const { user } = useSession();
 
+    const { theme, setTheme } = useTheme();
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -21,7 +25,7 @@ export default function UserButton({ className }: UserButtonProps) {
                     <UserAvatar avatarUrl={user.avatarUrl} size={40} />
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="border-gray-200 rounded-xl bg-white dark:bg-black">
                 <DropdownMenuLabel>Logged in as @{user.username}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <Link href={`/users/${user.username}`}>
@@ -30,6 +34,40 @@ export default function UserButton({ className }: UserButtonProps) {
                         Profile
                     </DropdownMenuItem>
                 </Link>
+                <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                        <Monitor className="mr-2 size-4" />
+                        Theme
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                        <DropdownMenuSubContent className="border-gray-200 rounded-xl bg-white dark:bg-black">
+                            <DropdownMenuItem onClick={() => setTheme("system")} className="text-xs">
+                                <Monitor className="mr-2 size-4" />
+                                System default
+                                {theme === "system" && <Check className="ms-2 size-4" />}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("light")} className="text-xs">
+                                <Sun className="mr-2 size-4" />
+                                Light
+                                {theme === "light" && <Check className="ms-2 size-4" />}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("dark")} className="text-xs">
+                                <Moon className="mr-2 size-4" />
+                                Dark
+                                {theme === "dark" && <Check className="ms-2 size-4" />}
+                            </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                </DropdownMenuSub>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                    onClick={() => {
+                        // queryClient.clear();
+                        logout();
+                    }}>
+                    <LogOutIcon className="mr-2 size-4" />
+                    Logout
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )
