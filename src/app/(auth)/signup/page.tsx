@@ -15,7 +15,7 @@ export default function page() {
                 <div className="flex flex-col gap-6">
                     <Card className='border-gray-300'>
                         <CardHeader className="text-center">
-                            <CardTitle className="text-xl">Sign up to rizzUp</CardTitle>
+                            <CardTitle className="text-2xl">Sign up to rizzUp</CardTitle>
                             <CardDescription className='text-xs'>
                                 Ready to level up your vibe? Join RizzUp and meet real friends.
                             </CardDescription>
