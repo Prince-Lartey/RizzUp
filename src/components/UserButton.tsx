@@ -25,7 +25,7 @@ export default function UserButton({ className }: UserButtonProps) {
                     <UserAvatar avatarUrl={user.avatarUrl} size={40} />
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="border-gray-200 rounded-xl bg-white dark:bg-black">
+            <DropdownMenuContent className="">
                 <DropdownMenuLabel>Logged in as @{user.username}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <Link href={`/users/${user.username}`}>
@@ -40,7 +40,7 @@ export default function UserButton({ className }: UserButtonProps) {
                         Theme
                     </DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
-                        <DropdownMenuSubContent className="border-gray-200 rounded-xl bg-white dark:bg-black">
+                        <DropdownMenuSubContent className="">
                             <DropdownMenuItem onClick={() => setTheme("system")} className="text-xs">
                                 <Monitor className="mr-2 size-4" />
                                 System default
