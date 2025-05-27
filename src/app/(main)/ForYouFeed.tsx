@@ -1,6 +1,7 @@
 "use client"
 
 import Post from "@/components/posts/Post";
+import { Button } from "@/components/ui/button";
 import kyInstance from "@/lib/ky";
 import { PostData, PostsPage } from "@/lib/types";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -21,6 +22,8 @@ export default function ForYouFeed() {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
     })
 
+    const posts = data?.pages.flatMap((page) => page.posts) || [];
+
     if (status === "pending") {
         return <Loader2 className="mx-auto animate-spin" />
     }
@@ -35,9 +38,10 @@ export default function ForYouFeed() {
 
     return (
         <div className="space-y-5">
-            {query.data.map(post => (
+            {posts.map(post => (
                 <Post key={post.id} post={post} />
             ))}
+            <Button onClick={() => fetchNextPage()}>load more</Button>
         </div>
     )
 }
