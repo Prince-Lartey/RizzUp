@@ -10,10 +10,12 @@ import { cn } from "@/lib/utils";
 import LoadingButton from "@/components/LoadingButton";
 import { useState } from "react";
 import "./styles.css"
+import { useSubmitPostMutation } from "./mutation";
 
 export default function PostEditor() {
     const { user } = useSession();
-    const [loading, setLoading] = useState(false)
+
+    const mutation = useSubmitPostMutation();
 
     const editor = useEditor({
         extensions: [
@@ -32,9 +34,12 @@ export default function PostEditor() {
             blockSeparator: "\n",
         }) || "";
 
-    async function onSubmit() {
-        await submitPost(input)
-        editor?.commands.clearContent()
+    function onSubmit() {
+        mutation.mutate(input, {
+            onSuccess: () => {
+                editor?.commands.clearContent()
+            }
+        })
     }
 
     return (
@@ -54,7 +59,7 @@ export default function PostEditor() {
             <div className="flex justify-end">
                 <LoadingButton
                     onClick={onSubmit}
-                    loading={loading}
+                    loading={mutation.isPending}
                     disabled={!input.trim()}
                     className="min-w-20 "
                 >

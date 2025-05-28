@@ -56,7 +56,7 @@ async function WhoToFollow() {
                         </p>
                     </div>
                 </Link>
-                <Button className='text-xs px-2 py-1 rounded-full'>Follow</Button>
+                <Button className='text-xs px-2 py-1 rounded-full bg-blue-500'>Follow</Button>
             </div>
         ))}
     </div>
