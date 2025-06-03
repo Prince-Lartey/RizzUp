@@ -1,5 +1,8 @@
 import { validateRequest } from "@/auth";
+import FollowButton from "@/components/FollowButton";
+import FollowerCount from "@/components/FollowerCount";
 import TrendsSidebar from "@/components/TrendsSidebar";
+import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/UserAvatar";
 import prisma from "@/lib/prisma";
 import { FollowerInfo, getUserDataSelect, UserData } from "@/lib/types";
@@ -8,6 +11,7 @@ import { formatDate } from "date-fns";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import UserPosts from "./UserPosts";
 
 interface PageProps {
     params: { username: string };
@@ -63,7 +67,7 @@ export default async function Page({ params: { username } }: PageProps) {
                         {user.displayName}&apos;s posts
                     </h2>
                 </div>
-                {/* <UserPosts userId={user.id} /> */}
+                <UserPosts userId={user.id} />
             </div>
             <TrendsSidebar />
         </main>
@@ -100,10 +104,22 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
                                 {formatNumber(user._count.posts)}
                             </span>
                         </span>
-                        {/* <FollowerCount userId={user.id} initialState={followerInfo} /> */}
+                        <FollowerCount userId={user.id} initialState={followerInfo} />
                     </div>
                 </div>
+                {user.id === loggedInUserId ? (
+                    <Button>Edit Profile</Button>
+                    ) : (
+                    <FollowButton userId={user.id} initialState={followerInfo} />
+                )}
             </div>
+            {user.bio && (
+                <>
+                    <div className="overflow-hidden whitespace-pre-line break-words">
+                        {user.bio}
+                    </div>
+                </>
+            )}
         </div>
     )
 }
