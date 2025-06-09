@@ -33,22 +33,24 @@ export const fileRouter = {
         `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`,
       );
 
-        await Promise.all([
-            prisma.user.update({
-                where: { id: metadata.user.id },
-                data: {
-                    avatarUrl: newAvatarUrl,
-                },
-            }),
-            // streamServerClient.partialUpdateUser({
-            //     id: metadata.user.id,
-            //     set: {
-            //     image: newAvatarUrl,
-            //     },
-            // }),
-        ]);
+      await prisma.user.update({
+          where: { id: metadata.user.id },
+          data: {
+              avatarUrl: newAvatarUrl,
+          },
+      })
 
-        return { avatarUrl: newAvatarUrl };
+      // await Promise.all([
+          
+      //     // streamServerClient.partialUpdateUser({
+      //     //     id: metadata.user.id,
+      //     //     set: {
+      //     //     image: newAvatarUrl,
+      //     //     },
+      //     // }),
+      // ]);
+
+      return { avatarUrl: newAvatarUrl };
     }),
     // attachment: f({
     //     image: { maxFileSize: "4MB", maxFileCount: 5 },
