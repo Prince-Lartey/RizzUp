@@ -9,6 +9,7 @@ import { unstable_cache } from 'next/cache';
 import { formatNumber } from '@/lib/utils';
 import { getUserDataSelect } from '@/lib/types';
 import FollowButton from './FollowButton';
+import UserTooltip from './UserTooltip';
 
 export default function TrendsSidebar() {
     return (
@@ -46,17 +47,19 @@ async function WhoToFollow() {
         <div className="text-base font-bold">rizzUp Recommends</div>
         {usersToFollow.map((user) => (
             <div key={user.id} className="flex items-center justify-between gap-3">
-                <Link href={`/users/${user.username}`} className="flex items-center gap-3">
-                    <UserAvatar avatarUrl={user.avatarUrl} className="flex-none" size={38}/>
-                    <div>
-                        <p className="line-clamp-1 break-all font-semibold hover:underline text-sm">
-                            {user.displayName}
-                        </p>
-                        <p className="line-clamp-1 break-all text-muted-foreground text-xs">
-                            @{user.username}
-                        </p>
-                    </div>
-                </Link>
+                <UserTooltip user={user}>
+                    <Link href={`/users/${user.username}`} className="flex items-center gap-3">
+                        <UserAvatar avatarUrl={user.avatarUrl} className="flex-none" size={38}/>
+                        <div>
+                            <p className="line-clamp-1 break-all font-semibold hover:underline text-sm">
+                                {user.displayName}
+                            </p>
+                            <p className="line-clamp-1 break-all text-muted-foreground text-xs">
+                                @{user.username}
+                            </p>
+                        </div>
+                    </Link>
+                </UserTooltip>
                 <FollowButton
                     userId={user.id}
                     initialState={{

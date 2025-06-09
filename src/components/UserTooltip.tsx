@@ -45,7 +45,7 @@ export default function UserTooltip({ children, user }: UserTooltipProps) {
             </div>
             <div>
               <Link href={`/users/${user.username}`}>
-                <div className="text-lg font-semibold hover:underline">
+                <div className="text-lg font-semibold hover:underline text-black">
                   {user.displayName}
                 </div>
                 <div className="text-muted-foreground">@{user.username}</div>
