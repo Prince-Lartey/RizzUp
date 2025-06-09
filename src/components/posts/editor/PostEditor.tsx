@@ -4,18 +4,26 @@ import { useSession } from "@/app/(main)/SessionProvider";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import { submitPost } from "./actions";
 import UserAvatar from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
 import LoadingButton from "@/components/LoadingButton";
-import { useState } from "react";
 import "./styles.css"
 import { useSubmitPostMutation } from "./mutation";
+import useMediaUpload from "./useMediaUpload";
 
 export default function PostEditor() {
     const { user } = useSession();
 
     const mutation = useSubmitPostMutation();
+
+    const {
+        startUpload,
+        attachments,
+        isUploading,
+        uploadProgress,
+        removeAttachment,
+        reset: resetMediaUploads,
+    } = useMediaUpload();
 
     const editor = useEditor({
         extensions: [
